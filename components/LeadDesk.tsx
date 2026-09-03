@@ -230,13 +230,13 @@ export function LeadDesk() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-[1600px] gap-px bg-border xl:grid-cols-[310px_minmax(0,1fr)_370px]">
-        <aside className="bg-background xl:min-h-[calc(100vh-137px)]">
+      <div className="mx-auto grid max-w-[1600px] gap-px bg-border lg:grid-cols-[280px_minmax(0,1fr)_340px] xl:grid-cols-[310px_minmax(0,1fr)_370px]">
+        <aside className="bg-background lg:min-h-[calc(100vh-137px)]">
           <div className="flex items-center justify-between border-b border-border px-4 py-4 sm:px-5">
             <div>
               <p className="text-sm font-semibold">Missed-call inbox</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Ranked by recoverable value
+                Ranked by synthetic job value
               </p>
             </div>
             <Badge className="bg-foreground text-background">
@@ -358,7 +358,7 @@ export function LeadDesk() {
               </div>
               <div className="rounded-xl border border-ink/10 bg-white/70 px-4 py-3 text-left sm:text-right">
                 <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-ink/45">
-                  Potential job
+                  Sample job value
                 </p>
                 <p className="mt-1 text-xl font-semibold text-emerald-800">
                   {money(selected.opportunityValue)}
@@ -447,7 +447,7 @@ export function LeadDesk() {
           </div>
         </section>
 
-        <aside className="bg-[#101512] p-4 text-white sm:p-6 xl:min-h-[calc(100vh-137px)]">
+        <aside className="bg-[#101512] p-4 text-white sm:p-6 lg:min-h-[calc(100vh-137px)]">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-signal">

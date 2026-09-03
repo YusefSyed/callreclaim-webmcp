@@ -128,7 +128,7 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       name: 'list_demo_leads',
       title: 'List demo leads',
       description:
-        'List the bounded synthetic missed-call leads visible in the CallReclaim rescue desk. Use this first to compare urgency, consent, age, value, and current review status. This tool never reads real customer data.',
+        'List the bounded synthetic missed-call leads visible in the CallReclaim rescue desk. Use this first to compare urgency, consent, age, sample job value, and current review status. This tool never reads real customer data.',
       inputSchema: {
         type: 'object',
         properties: {
