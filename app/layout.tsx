@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
-  title: 'CallReclaim — Agent Rescue Desk',
+  title: 'CallReclaim: Agent Rescue Desk',
   description:
     'A synthetic WebMCP missed-call recovery desk where an agent prepares and the owner decides.',
   alternates: { canonical: '/' },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: 'CallReclaim',
-    title: 'CallReclaim — Agent Rescue Desk',
+    title: 'CallReclaim: Agent Rescue Desk',
     description:
       'A synthetic WebMCP missed-call recovery desk where an agent prepares and the owner decides.',
     images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CallReclaim — Agent Rescue Desk',
+    title: 'CallReclaim: Agent Rescue Desk',
     description:
       'A synthetic WebMCP missed-call recovery desk where an agent prepares and the owner decides.',
     images: ['/og.png'],

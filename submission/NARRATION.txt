@@ -1,15 +1,15 @@
-This is CallReclaim. The demo uses fictional records, and the workflow stops at owner review.
+This is CallReclaim. The owner has time for one reply in the next 30 minutes. The agent's job is to decide which missed call deserves it and show why.
 
-When a detailing shop misses a call between jobs, the useful details can get buried across a missed-call alert, a consent record, and a text conversation. This desk gives an agent four WebMCP tools for preparing that work without making the owner's decision.
+The page exposes five WebMCP tools. They read the live desk, stage a plan, inspect a conversation, draft, and queue. There is no approve tool and no send tool.
 
-I ask the agent to compare the consented leads. It gets a short, structured list with each request's age, urgency, and sample job value, then chooses the paint-correction inquiry.
+The agent gets a short list with timing, urgency, sample job value, follow-up permission, and the owner's current brief. It chooses Jordan's paint-correction request and cites two details: an estimate is requested before noon today. The proposal appears on the page I am already using.
 
-Inspecting that lead opens the same conversation I see. The agent receives the caller's message and the facts already recorded on the page: a black SUV, swirl marks, an estimate request, and a deadline before Saturday.
+The agent cannot accept its own plan. I can clear it or use it. I accept this one, which unlocks agent drafting for that lead only.
 
-Next, it drafts a reply from those details. The text appears in my editor as revision one. I can change it, discard it, or leave it alone.
+Inspecting opens the same conversation I see. The agent stages a short reply and declares the exact facts it used. Those citations light up in the owner checkpoint. Queueing requires the current draft revision. The text is still editable and unsent.
 
-When the agent queues that revision, the draft moves to my review. If I edit it, the queue reopens and the old revision is rejected. That prevents the agent from acting on work I have already changed.
+Now I change the text. The review state reopens, and the old queue request fails. My edit stays on screen. The agent has to work from a new revision instead of overwriting me.
 
-The final record has no follow-up consent. A drafting attempt fails, and the page stays unchanged.
+One caller even puts an instruction inside the message. The transcript is marked untrusted, and caller text cannot create approval or send powers. A record without a follow-up request is blocked from planning and drafting.
 
-That is the point of CallReclaim: let the agent sort the conversation and prepare a response, then leave the judgment with the person who owns the customer relationship.
+The agent sorts the call. It prepares the reply. The owner decides whether it goes anywhere.

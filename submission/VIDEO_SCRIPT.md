@@ -1,59 +1,57 @@
-# Demo video script — target 2:10
+# Demo video script
 
-Use a fresh reset of the public deployment. Record only the challenge app and the WebMCP tool surface; do not show private repositories, browser history, notifications, accounts, or credentials. Use narration without music.
+Target length: 1 minute 55 seconds
 
-## 0:00–0:12 — What this is
+Use a fresh reset of the public deployment. Record the app and the WebMCP interaction only. Do not show private repositories, browser history, notifications, account details, or credentials. Start already logged in. Record short clips, remove loading and typing, and use narration without music.
 
-**Visual:** Title and full rescue desk.
+## 0:00 to 0:12 | Show the working product
 
-**Narration:** “This is CallReclaim, a synthetic missed-call rescue desk built for people and WebMCP agents to use together. There is no customer data, phone connection, or send capability.”
+**Visual:** Open on the full CallReclaim desk. Keep the owner brief, empty rescue plan, inbox, and selected call visible.
 
-## 0:12–0:25 — Show the contract
+**Narration:** "This is CallReclaim. The owner has time for one reply in the next 30 minutes. The agent's job is to decide which missed call deserves it and show why."
 
-**Visual:** Open Site tools and show the four registered tools.
+## 0:12 to 0:24 | Show the tool boundary
 
-**Narration:** “The page exposes four explicit tools: list the demo leads, inspect one lead, stage an owner reply, and queue the current draft for review. The agent can prepare the work, but it cannot approve or send it.”
+**Visual:** Open Site tools. Show all five names without lingering on setup.
 
-## 0:25–0:43 — Compare the inbox
+**Narration:** "The page exposes five WebMCP tools. They read the live desk, stage a plan, inspect a conversation, draft, and queue. There is no approve tool and no send tool."
 
-**Prompt:** “Compare the consented missed calls and identify the highest-value lead.”
+## 0:24 to 0:46 | Compare and stage a plan
 
-**Visual:** Agent calls `list_demo_leads`; show the bounded result and unchanged inbox.
+**Prompt shown before recording:** "I have time for one reply in the next 30 minutes. Compare the authorized leads and stage a rescue plan. Use the recorded facts to explain the choice."
 
-**Narration:** “Instead of guessing through the interface, the agent receives structured urgency, consent, age, value, and status. It identifies the paint-correction request.”
+**Visual:** Show `list_demo_leads`, then `stage_rescue_plan`. Keep the visible plan in frame.
 
-## 0:43–1:02 — Inspect exact evidence
+**Narration:** "The agent gets a short list with timing, urgency, sample job value, follow-up permission, and the owner's current brief. It chooses Jordan's paint-correction request and cites two details: an estimate is requested before noon today. The proposal appears on the page I am already using."
 
-**Visual:** Agent calls `inspect_demo_lead`; the selected conversation changes visibly.
+## 0:46 to 0:57 | Owner acceptance
 
-**Narration:** “Inspecting the lead opens the same record I see and returns the exact synthetic transcript plus its verified fact list. Those facts become the provenance for a proposed reply.”
+**Visual:** Click **Use this plan**. Show the accepted state and drafting-unlocked label.
 
-## 1:02–1:23 — Stage, do not send
+**Narration:** "The agent cannot accept its own plan. I can clear it or use it. I accept this one, which unlocks agent drafting for that lead only."
 
-**Visual:** Agent calls `draft_owner_reply`; the editable text appears and activity log updates.
+## 0:57 to 1:22 | Inspect, draft, and queue
 
-**Narration:** “The draft tool validates consent, text bounds, and declared fact provenance. It stages revision one in the owner checkpoint. The response is visible, editable, and explicitly unsent.”
+**Prompt shown before recording:** "Inspect the accepted lead. Draft a short reply using only the recorded details, then queue the current revision for my review. Do not claim to send anything."
 
-## 1:23–1:39 — Revision-gated handoff
+**Visual:** Show `inspect_demo_lead`, `draft_owner_reply`, and `queue_for_owner_review`. End on the owner checkpoint with highlighted citations and revision one in the activity.
 
-**Visual:** Agent calls `queue_for_owner_review`; status changes to Owner review and human-only controls appear.
+**Narration:** "Inspecting opens the same conversation I see. The agent stages a short reply and declares the exact facts it used. Those citations light up in the owner checkpoint. Queueing requires the current draft revision. The text is still editable and unsent."
 
-**Narration:** “Queueing requires the exact current revision. The agent stops here. Only the owner can review or discard the draft.”
+## 1:22 to 1:39 | Protect the owner's edit
 
-## 1:39–1:55 — Human and agent do not overwrite each other
+**Visual:** Change one phrase in the textarea. Show the draft reopen. Attempt to queue revision one and show the intentional `unstaged_edits` error.
 
-**Visual:** Manually edit one word. Show the review status reopen and queue action remain blocked until the edit is staged as a new revision.
+**Narration:** "Now I change the text. The review state reopens, and the old queue request fails. My edit stays on screen. The agent has to work from a new revision instead of overwriting me."
 
-**Narration:** “If I edit the queued text, the handoff reopens. The old revision can no longer be queued, preventing an agent from overwriting or approving work I changed.”
+## 1:39 to 1:51 | Test hostile and unauthorized input
 
-## 1:55–2:05 — Consent failure
+**Visual:** Open DEMO-517 and show the untrusted caller warning. Briefly show the no-follow-up record in the inbox.
 
-**Visual:** Attempt `draft_owner_reply` for `lead-no-consent`; show the intentional tool error and unchanged reviewed lead.
+**Narration:** "One caller even puts an instruction inside the message. The transcript is marked untrusted, and caller text cannot create approval or send powers. A record without a follow-up request is blocked from planning and drafting."
 
-**Narration:** “A lead without follow-up permission rejects drafting at the state boundary. This is enforced behavior, not just a warning.”
+## 1:51 to 2:01 | Close
 
-## 2:05–2:15 — Close
+**Visual:** Return to the accepted plan and owner checkpoint. Keep **Nothing can send** visible.
 
-**Visual:** Return to the full desk with the “Nothing can send” and WebMCP status labels visible.
-
-**Narration:** “CallReclaim shows where agents are useful and where they should stop: organize the evidence, prepare the response, and leave the consequential decision with the person.”
+**Narration:** "The agent sorts the call. It prepares the reply. The owner decides whether it goes anywhere."
