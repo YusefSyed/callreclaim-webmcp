@@ -397,7 +397,7 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       name: 'queue_for_owner_review',
       title: 'Queue for owner review',
       description:
-        'After draft_owner_reply, move the exact current draft into owner review. Pass its revision so stale or already reviewed work is rejected. This tool cannot approve or send.',
+        'After draft_owner_reply, queue the exact current draft while its accepted plan is current. Pass its revision so stale or reviewed work is rejected. This cannot approve or send.',
       inputSchema: {
         type: 'object',
         properties: {

@@ -198,6 +198,53 @@ void test('agent drafts require the accepted plan but owner manual drafts remain
   );
 });
 
+void test('an owner brief change blocks an agent from queueing an old planned draft', () => {
+  let state = acceptRescuePlan(
+    stageRescuePlan(createInitialState(), mayaPlan, 'agent'),
+  );
+  state = stageDraft(state, mayaDraft, 'agent');
+  state = setOwnerReplyCapacity(state, 2);
+  assert.equal(state.rescuePlan, null);
+  assert.throws(
+    () =>
+      queueForOwnerReview(
+        state,
+        { leadId: 'lead-full-detail', expectedDraftRevision: 1 },
+        'agent',
+      ),
+    (error) =>
+      error instanceof WorkflowError && error.code === 'owner_plan_required',
+  );
+  const ownerQueued = queueForOwnerReview(
+    state,
+    { leadId: 'lead-full-detail', expectedDraftRevision: 1 },
+    'owner',
+  );
+  assert.equal(
+    ownerQueued.leads.find((lead) => lead.id === 'lead-full-detail')?.status,
+    'awaiting_owner_review',
+  );
+});
+
+void test('a replacement rescue plan makes the earlier agent draft stale', () => {
+  let state = acceptRescuePlan(
+    stageRescuePlan(createInitialState(), mayaPlan, 'agent'),
+  );
+  state = stageDraft(state, mayaDraft, 'agent');
+  state = stageRescuePlan(state, mayaPlan, 'agent');
+  state = acceptRescuePlan(state);
+  assert.throws(
+    () =>
+      queueForOwnerReview(
+        state,
+        { leadId: 'lead-full-detail', expectedDraftRevision: 1 },
+        'agent',
+      ),
+    (error) =>
+      error instanceof WorkflowError && error.code === 'stale_rescue_plan',
+  );
+});
+
 void test('blocks missing follow-up requests and stale draft revisions', () => {
   assert.throws(
     () =>
@@ -220,7 +267,7 @@ void test('blocks missing follow-up requests and stale draft revisions', () => {
       queueForOwnerReview(
         staged,
         { leadId: 'lead-full-detail', expectedDraftRevision: 2 },
-        'agent',
+        'owner',
       ),
     (error) =>
       error instanceof WorkflowError && error.code === 'stale_revision',
@@ -232,7 +279,7 @@ void test('reviewed draft cannot requeue until an owner edit creates a new revis
   state = queueForOwnerReview(
     state,
     { leadId: 'lead-full-detail', expectedDraftRevision: 1 },
-    'agent',
+    'owner',
   );
   state = markOwnerReviewed(state, 'lead-full-detail');
   assert.throws(
@@ -240,7 +287,7 @@ void test('reviewed draft cannot requeue until an owner edit creates a new revis
       queueForOwnerReview(
         state,
         { leadId: 'lead-full-detail', expectedDraftRevision: 1 },
-        'agent',
+        'owner',
       ),
     (error) =>
       error instanceof WorkflowError && error.code === 'owner_review_complete',
@@ -258,7 +305,7 @@ void test('reviewed draft cannot requeue until an owner edit creates a new revis
   state = queueForOwnerReview(
     state,
     { leadId: 'lead-full-detail', expectedDraftRevision: 2 },
-    'agent',
+    'owner',
   );
   assert.equal(
     state.leads.find((lead) => lead.id === 'lead-full-detail')?.status,

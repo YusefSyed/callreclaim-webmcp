@@ -6,6 +6,9 @@ export type Draft = {
   factsUsed: string[];
   revision: number;
   queuedRevision: number | null;
+  source: ActionSource;
+  planRevision: number | null;
+  briefRevision: number | null;
 };
 export type OwnerBrief = {
   maxUrgentReplies: 1 | 2;
@@ -344,12 +347,21 @@ export function stageDraft(
     );
   const factsUsed = validateFacts(lead, input.factsUsed);
   const revision = (state.drafts[lead.id]?.revision ?? 0) + 1;
+  const acceptedPlan = source === 'agent' ? state.rescuePlan : null;
   let next: LeadDeskState = {
     ...state,
     selectedLeadId: lead.id,
     drafts: {
       ...state.drafts,
-      [lead.id]: { text: replyText, factsUsed, revision, queuedRevision: null },
+      [lead.id]: {
+        text: replyText,
+        factsUsed,
+        revision,
+        queuedRevision: null,
+        source,
+        planRevision: acceptedPlan?.revision ?? null,
+        briefRevision: acceptedPlan?.briefRevision ?? null,
+      },
     },
     editorText: { ...state.editorText, [lead.id]: replyText },
   };
@@ -374,6 +386,30 @@ export function queueForOwnerReview(
       'draft_required',
       'Stage a draft before queueing it for owner review.',
     );
+  if (source === 'agent') {
+    const plan = state.rescuePlan;
+    if (
+      !plan ||
+      plan.status !== 'accepted' ||
+      plan.briefRevision !== state.ownerBrief.revision ||
+      !plan.leadIds.includes(lead.id)
+    ) {
+      throw new WorkflowError(
+        'owner_plan_required',
+        'An agent can queue only while a current accepted rescue plan includes this lead.',
+      );
+    }
+    if (
+      draft.source === 'agent' &&
+      (draft.planRevision !== plan.revision ||
+        draft.briefRevision !== plan.briefRevision)
+    ) {
+      throw new WorkflowError(
+        'stale_rescue_plan',
+        'This agent draft belongs to an older rescue plan. Stage a new draft from the accepted plan.',
+      );
+    }
+  }
   if (lead.status === 'reviewed' && draft.queuedRevision === draft.revision) {
     throw new WorkflowError(
       'owner_review_complete',
