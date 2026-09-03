@@ -2,6 +2,8 @@
 
 CallReclaim is a synthetic missed-call recovery desk built for people and WebMCP agents to use together. An agent can compare several demo inquiries, open the exact transcript behind one lead, stage a fact-grounded reply, and queue that draft for an owner. The owner alone can review or discard it. There is deliberately no send tool.
 
+![CallReclaim Agent Rescue Desk](./public/og.png)
+
 This repository is the isolated WebMCP Challenge edition. It contains no production CallReclaim infrastructure, customer records, phone numbers, credentials, external APIs, authentication, tracking, or messaging capability.
 
 ## Live app
