@@ -208,7 +208,7 @@ export function LeadDesk() {
               Shared live workspace
             </p>
             <h1 className="mt-1 text-xl font-semibold tracking-[-0.025em] sm:text-2xl">
-              Rescue the right missed call. Keep the owner in control.
+              Find the missed call worth handling first.
             </h1>
             <p className="mt-2 max-w-3xl text-xs leading-5 text-ink/55">
               Try: “Compare the consented leads, inspect the highest-value one,
@@ -216,9 +216,6 @@ export function LeadDesk() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-900/10 bg-white px-3 py-1.5">
-              <span className="size-1.5 rounded-full bg-emerald-600" /> 3 consented
-            </span>
             <span
               className="inline-flex items-center gap-1.5 rounded-full border border-emerald-900/10 bg-white px-3 py-1.5"
               title={webMcpDetail}
@@ -230,13 +227,13 @@ export function LeadDesk() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-[1600px] gap-px bg-border lg:grid-cols-[280px_minmax(0,1fr)_340px] xl:grid-cols-[310px_minmax(0,1fr)_370px]">
-        <aside className="bg-background lg:min-h-[calc(100vh-137px)]">
+      <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)] gap-px bg-border lg:grid-cols-[280px_minmax(0,1fr)_340px] xl:grid-cols-[310px_minmax(0,1fr)_370px]">
+        <aside className="min-w-0 bg-background lg:min-h-[calc(100vh-137px)]">
           <div className="flex items-center justify-between border-b border-border px-4 py-4 sm:px-5">
             <div>
               <p className="text-sm font-semibold">Missed-call inbox</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Ranked by synthetic job value
+                3 consented · ranked by sample job value
               </p>
             </div>
             <Badge className="bg-foreground text-background">
@@ -244,14 +241,14 @@ export function LeadDesk() {
             </Badge>
           </div>
           <div
-            className="divide-y divide-border"
+            className="flex w-full min-w-0 gap-px overflow-x-auto bg-border lg:block lg:divide-y lg:divide-border"
             aria-label="Synthetic missed calls"
           >
             {rankedLeads.map((lead) => {
               const active = selected.id === lead.id;
               return (
                 <button
-                  className={`group w-full px-4 py-4 text-left transition sm:px-5 ${
+                  className={`group min-w-[220px] flex-none px-4 py-3 text-left transition sm:min-w-[245px] sm:px-5 lg:w-full lg:min-w-0 lg:py-4 ${
                     active
                       ? 'bg-ink text-white'
                       : 'bg-background hover:bg-paper-deep'
@@ -293,7 +290,7 @@ export function LeadDesk() {
                     </span>
                   </div>
                   <p
-                    className={`mt-3 line-clamp-2 text-xs leading-5 ${
+                    className={`mt-3 hidden line-clamp-2 text-xs leading-5 sm:block ${
                       active ? 'text-white/70' : 'text-foreground/70'
                     }`}
                   >
@@ -371,7 +368,7 @@ export function LeadDesk() {
                 <div>
                   <p className="text-sm font-semibold">Conversation</p>
                   <p className="text-xs text-ink/45">
-                    Exact synthetic transcript
+                    Conversation record
                   </p>
                 </div>
                 <Badge
@@ -454,7 +451,7 @@ export function LeadDesk() {
                 Owner checkpoint
               </p>
               <h2 className="mt-1 text-lg font-semibold">
-                Prepare, never send
+                Draft for owner review
               </h2>
             </div>
             <span className="grid size-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-mint">
@@ -464,7 +461,7 @@ export function LeadDesk() {
 
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <div className="flex items-center gap-2 text-xs font-medium text-white/70">
-              <Bot className="size-4 text-mint" /> Agent can use these facts
+              <Bot className="size-4 text-mint" /> Details from this conversation
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {selected.facts.map((fact) => (
@@ -552,7 +549,7 @@ export function LeadDesk() {
 
           {hasUnstagedEdits ? (
             <p className="mt-2 text-[11px] leading-5 text-signal/80">
-              Stage the current edit before queueing so its revision stays exact.
+              Save this edit before queueing it for review.
             </p>
           ) : null}
 
@@ -633,8 +630,8 @@ export function LeadDesk() {
 
           <div className="mt-6 flex items-start gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-[11px] leading-5 text-white/45">
             <ShieldCheck className="mt-0.5 size-4 shrink-0 text-mint" />
-            Synthetic records only. No database, phone number, customer account,
-            or sending capability exists in this challenge edition.
+            Challenge demo: every record is fictional, and no outside service is
+            connected.
           </div>
         </aside>
       </div>

@@ -4,12 +4,13 @@ import test from 'node:test';
 import {
   createInitialState,
   type LeadDeskState,
-  WorkflowError,
 } from '../lib/lead-workflow';
 import { registerWebMcpTools } from '../lib/register-webmcp-tools';
 
 type CapturedTool = {
   name: string;
+  description: string;
+  inputSchema: Record<string, unknown>;
   annotations?: { readOnlyHint?: boolean; untrustedContentHint?: boolean };
   execute(input: unknown): unknown;
 };
@@ -59,12 +60,29 @@ void test('registers exactly four tools and executes the full visible workflow',
     assert.deepEqual(statuses, ['registering', 'ready']);
     assert.equal(tools[0].annotations?.readOnlyHint, true);
     assert.equal(tools.slice(1).every((tool) => tool.annotations?.readOnlyHint === false), true);
+    assert.equal(tools.every((tool) => tool.name.length <= 30), true);
+    assert.equal(tools.every((tool) => tool.description.length <= 500), true);
+    for (const tool of tools) {
+      const properties = (tool.inputSchema.properties ?? {}) as Record<
+        string,
+        { description?: string }
+      >;
+      assert.equal(
+        Object.values(properties).every(
+          (property) =>
+            typeof property.description === 'string' &&
+            property.description.length <= 150,
+        ),
+        true,
+      );
+    }
 
     const list = (await tools[0].execute({ consentVerified: true })) as {
       count: number;
       leads: Array<{ id: string }>;
     };
     assert.equal(list.count, 3);
+    assert.ok(JSON.stringify(list).length <= 1500);
 
     const inspected = (await tools[1].execute({
       leadId: 'lead-paint-correction',
@@ -76,6 +94,7 @@ void test('registers exactly four tools and executes the full visible workflow',
       'Estimate requested',
       'Before Saturday',
     ]);
+    assert.ok(JSON.stringify(inspected).length <= 1500);
 
     const drafted = (await tools[2].execute({
       leadId: 'lead-paint-correction',
@@ -85,6 +104,7 @@ void test('registers exactly four tools and executes the full visible workflow',
     })) as { draftRevision: number; unsent: boolean };
     assert.equal(drafted.draftRevision, 1);
     assert.equal(drafted.unsent, true);
+    assert.ok(JSON.stringify(drafted).length <= 1500);
 
     const queued = (await tools[3].execute({
       leadId: 'lead-paint-correction',
@@ -92,6 +112,7 @@ void test('registers exactly four tools and executes the full visible workflow',
     })) as { status: string; sent: boolean };
     assert.equal(queued.status, 'awaiting_owner_review');
     assert.equal(queued.sent, false);
+    assert.ok(JSON.stringify(queued).length <= 1500);
     assert.equal(state.activity[0].source, 'agent');
 
     assert.throws(
@@ -102,7 +123,7 @@ void test('registers exactly four tools and executes the full visible workflow',
           factsUsed: ['No consent recorded'],
         }),
       (error) =>
-        error instanceof WorkflowError && error.code === 'consent_required',
+        error instanceof Error && error.message.startsWith('consent_required:'),
     );
 
     cleanup();

@@ -22,18 +22,18 @@ Add the public YouTube URL after the final recording is uploaded.
 
 ## Inspiration
 
-A missed call is a small moment with a short half-life. The customer may already have described the job, timing, and location, but a busy business owner still has to find the important inquiry, reconstruct the context, write a careful response, and decide what should happen next.
+When a detailing shop misses a call between jobs, the useful details can end up split across a missed-call alert, a consent record, and a text thread. The owner still has to find the important inquiry, reconstruct what the caller asked for, and decide how to respond.
 
-Agents are good at comparing, extracting, and drafting. Business owners should retain consequential decisions. CallReclaim explores that boundary: the agent prepares a recoverable lead in the same live desk the owner sees, then stops at an explicit human checkpoint.
+While working on CallReclaim's original missed-call flow, I kept returning to one design question: what should an agent be allowed to prepare, and what should stay with the owner? WebMCP made it possible to express that boundary in the product itself. The agent works inside the same lead desk the owner sees and stops at owner review.
 
 ## What it does
 
 The challenge edition opens with four clearly labeled synthetic missed calls. In a WebMCP-capable browser, an agent can:
 
 1. Compare the bounded inbox by urgency, consent, age, value, and status.
-2. Open one lead and inspect its exact transcript and verified facts.
+2. Open one lead and inspect its conversation transcript and recorded facts.
 3. Stage an editable reply for a consented lead.
-4. Queue the exact current draft revision for owner review.
+4. Queue the current draft revision for owner review.
 
 Every tool invocation updates the visible interface. The owner can edit, review, discard, or reset the demo manually. The agent cannot approve or send anything because no such tool or backend capability exists.
 
@@ -68,7 +68,7 @@ Human oversight is strongest when it is expressed in the product's capabilities,
 
 ## What's next
 
-This challenge edition will stay synthetic. A future production integration would require separately authorized customer data, tenant isolation, carrier-compliant consent evidence, authentication, audit logs, and watched acceptance testing. None of those production claims are implied by this demo.
+This submission stays deliberately synthetic. A production version would require customer authorization and a separate operational rollout.
 
 ## Built with
 

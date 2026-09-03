@@ -4,6 +4,7 @@ import {
   selectLead,
   stageDraft,
   type LeadDeskState,
+  WorkflowError,
 } from '@/lib/lead-workflow';
 
 export type WebMcpRegistrationStatus =
@@ -109,6 +110,17 @@ function leadSummary(lead: DemoLead, revision: number | null) {
   };
 }
 
+function runWorkflow<T>(run: () => T) {
+  try {
+    return run();
+  } catch (error) {
+    if (error instanceof WorkflowError) {
+      throw new Error(`${error.code}: ${error.message}`);
+    }
+    throw error;
+  }
+}
+
 export function registerWebMcpTools(actions: RegistrationActions) {
   const context =
     typeof document === 'undefined' ? undefined : document.modelContext;
@@ -132,9 +144,20 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       inputSchema: {
         type: 'object',
         properties: {
-          urgency: { type: 'string', enum: LEAD_URGENCIES },
-          status: { type: 'string', enum: LEAD_STATUSES },
-          consentVerified: { type: 'boolean' },
+          urgency: {
+            type: 'string',
+            enum: LEAD_URGENCIES,
+            description: 'Return leads with this urgency only.',
+          },
+          status: {
+            type: 'string',
+            enum: LEAD_STATUSES,
+            description: 'Return leads in this workflow state only.',
+          },
+          consentVerified: {
+            type: 'boolean',
+            description: 'Filter by whether one follow-up message was authorized.',
+          },
         },
         additionalProperties: false,
       },
@@ -184,7 +207,14 @@ export function registerWebMcpTools(actions: RegistrationActions) {
         'Open one synthetic lead in the visible desk and return its exact transcript and verified facts. Use the returned facts to ground a proposed reply; do not invent customer details.',
       inputSchema: {
         type: 'object',
-        properties: { leadId: { type: 'string', minLength: 1, maxLength: 80 } },
+        properties: {
+          leadId: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 80,
+            description: 'Stable lead id returned by list_demo_leads.',
+          },
+        },
         required: ['leadId'],
         additionalProperties: false,
       },
@@ -193,8 +223,8 @@ export function registerWebMcpTools(actions: RegistrationActions) {
         const parsed = record(input);
         rejectExtraKeys(parsed, ['leadId']);
         const leadId = requiredString(parsed, 'leadId', 80);
-        const next = actions.applyState((state) =>
-          selectLead(state, leadId, 'agent'),
+        const next = runWorkflow(() =>
+          actions.applyState((state) => selectLead(state, leadId, 'agent')),
         );
         const lead = next.leads.find((candidate) => candidate.id === leadId)!;
         return {
@@ -219,13 +249,24 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       inputSchema: {
         type: 'object',
         properties: {
-          leadId: { type: 'string', minLength: 1, maxLength: 80 },
-          replyText: { type: 'string', minLength: 10, maxLength: 480 },
+          leadId: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 80,
+            description: 'Stable lead id returned by list_demo_leads.',
+          },
+          replyText: {
+            type: 'string',
+            minLength: 10,
+            maxLength: 480,
+            description: 'Proposed reply to stage. It remains editable and unsent.',
+          },
           factsUsed: {
             type: 'array',
             items: { type: 'string', minLength: 1, maxLength: 80 },
             minItems: 1,
             maxItems: 8,
+            description: 'Exact fact entries returned by inspect_demo_lead.',
           },
         },
         required: ['leadId', 'replyText', 'factsUsed'],
@@ -238,8 +279,10 @@ export function registerWebMcpTools(actions: RegistrationActions) {
         const leadId = requiredString(parsed, 'leadId', 80);
         const replyText = requiredString(parsed, 'replyText', 480);
         const factsUsed = requiredStringArray(parsed, 'factsUsed', 8);
-        const next = actions.applyState((state) =>
-          stageDraft(state, { leadId, replyText, factsUsed }, 'agent'),
+        const next = runWorkflow(() =>
+          actions.applyState((state) =>
+            stageDraft(state, { leadId, replyText, factsUsed }, 'agent'),
+          ),
         );
         const draft = next.drafts[leadId];
         return {
@@ -263,8 +306,17 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       inputSchema: {
         type: 'object',
         properties: {
-          leadId: { type: 'string', minLength: 1, maxLength: 80 },
-          expectedDraftRevision: { type: 'integer', minimum: 1 },
+          leadId: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 80,
+            description: 'Stable lead id whose draft should enter owner review.',
+          },
+          expectedDraftRevision: {
+            type: 'integer',
+            minimum: 1,
+            description: 'Current revision returned by draft_owner_reply.',
+          },
         },
         required: ['leadId', 'expectedDraftRevision'],
         additionalProperties: false,
@@ -279,11 +331,13 @@ export function registerWebMcpTools(actions: RegistrationActions) {
           'expectedDraftRevision',
           1,
         );
-        const next = actions.applyState((state) =>
-          queueForOwnerReview(
-            state,
-            { leadId, expectedDraftRevision },
-            'agent',
+        const next = runWorkflow(() =>
+          actions.applyState((state) =>
+            queueForOwnerReview(
+              state,
+              { leadId, expectedDraftRevision },
+              'agent',
+            ),
           ),
         );
         return {
