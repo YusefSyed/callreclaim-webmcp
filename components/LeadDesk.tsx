@@ -210,6 +210,10 @@ export function LeadDesk() {
             <h1 className="mt-1 text-xl font-semibold tracking-[-0.025em] sm:text-2xl">
               Rescue the right missed call. Keep the owner in control.
             </h1>
+            <p className="mt-2 max-w-3xl text-xs leading-5 text-ink/55">
+              Try: “Compare the consented leads, inspect the highest-value one,
+              draft a reply from verified facts, and queue it for my review.”
+            </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-900/10 bg-white px-3 py-1.5">
@@ -220,7 +224,7 @@ export function LeadDesk() {
               title={webMcpDetail}
             >
               <span className={`size-1.5 rounded-full ${webMcpDot}`} />
-              <span aria-live="polite">{webMcpLabel}</span>
+              <span aria-live="polite">WebMCP · {webMcpLabel}</span>
             </span>
           </div>
         </div>
