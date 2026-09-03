@@ -106,6 +106,21 @@ function runWorkflow<T>(run: () => T) {
     throw error;
   }
 }
+
+function resolveLeadId(state: LeadDeskState, identifier: string) {
+  const lead = state.leads.find(
+    (candidate) =>
+      candidate.id === identifier || candidate.reference === identifier,
+  );
+  if (!lead) {
+    throw new WorkflowError(
+      'lead_not_found',
+      `No demo lead exists with id or reference "${identifier}".`,
+    );
+  }
+  return lead.id;
+}
+
 function planSummary(state: LeadDeskState) {
   if (!state.rescuePlan) return null;
   const { leadIds, briefRevision, revision, status } = state.rescuePlan;
@@ -176,12 +191,12 @@ export function registerWebMcpTools(actions: RegistrationActions) {
           )
           .map((lead) => ({
             id: lead.id,
+            reference: lead.reference,
             service: lead.service,
             urgency: lead.urgency,
             ageMinutes: lead.ageMinutes,
             followUpAuthorized: lead.followUpAuthorized,
             sampleJobValue: lead.opportunityValue,
-            timing: lead.timing,
             facts: [lead.timing, ...lead.facts]
               .filter(
                 (fact, index, values) =>
@@ -211,7 +226,8 @@ export function registerWebMcpTools(actions: RegistrationActions) {
             type: 'string',
             minLength: 1,
             maxLength: 80,
-            description: 'Stable lead id returned by list_demo_leads.',
+            description:
+              'Lead id or visible DEMO reference from list_demo_leads.',
           },
         },
         required: ['leadId'],
@@ -221,7 +237,10 @@ export function registerWebMcpTools(actions: RegistrationActions) {
       execute(input) {
         const parsed = record(input);
         rejectExtraKeys(parsed, ['leadId']);
-        const leadId = requiredString(parsed, 'leadId', 80);
+        const leadId = resolveLeadId(
+          actions.getState(),
+          requiredString(parsed, 'leadId', 80),
+        );
         const next = runWorkflow(() =>
           actions.applyState((state) => selectLead(state, leadId, 'agent')),
         );

@@ -91,13 +91,18 @@ void test('registers five tools and executes the owner-constrained visible workf
     );
     for (const tool of tools) assertPropertyDescriptions(tool.inputSchema);
     const list = (await tools[0].execute({})) as {
-      leads: Array<{ id: string }>;
+      leads: Array<{ id: string; reference: string }>;
       ownerBrief: { revision: number };
       rescuePlan: unknown;
     };
     assert.equal(list.leads.length, state.leads.length);
     assert.equal(list.ownerBrief.revision, 1);
     assert.equal(list.rescuePlan, null);
+    assert.equal(
+      list.leads.find((lead) => lead.id === 'lead-agent-instruction')
+        ?.reference,
+      'DEMO-517',
+    );
     assert.ok(JSON.stringify(list).length <= 1500);
     const authorized = (await tools[0].execute({
       followUpAuthorized: true,
@@ -154,7 +159,7 @@ void test('registers five tools and executes the owner-constrained visible workf
     assert.ok(JSON.stringify(queued).length <= 1500);
     assert.equal(state.activity[0].source, 'agent');
     const adversarial = (await tools[1].execute({
-      leadId: 'lead-agent-instruction',
+      leadId: 'DEMO-517',
     })) as { safetyNote: string | null; transcript: unknown[] };
     assert.match(adversarial.safetyNote ?? '', /untrusted/i);
     assert.ok(adversarial.transcript.length > 0);
