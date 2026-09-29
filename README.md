@@ -1,5 +1,7 @@
 # CallReclaim: Agent Rescue Desk
 
+[![CI](https://github.com/YusefSyed/callreclaim-webmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/YusefSyed/callreclaim-webmcp/actions/workflows/ci.yml)
+
 CallReclaim is a synthetic missed-call desk for a business owner who has more requests than time. The owner says how many replies they can handle in the next 30 minutes. A WebMCP agent compares the inbox, cites the recorded facts, and stages a rescue plan. The owner must accept that plan before the agent can draft a reply.
 
 The agent can prepare the work. It cannot approve or send it. There is no send tool and no messaging backend.
@@ -86,17 +88,29 @@ The repository includes five prompt cases and deterministic tests for handlers, 
 Requires Node.js `>=22.13.0`.
 
 ```bash
-npm install
+git clone https://github.com/YusefSyed/callreclaim-webmcp.git
+cd callreclaim-webmcp
+npm ci
 npm run dev
 ```
+
+Open the local URL printed by the development server. The normal interface works
+without WebMCP; agent tools require a browser that supports it.
 
 ## Verify
 
 ```bash
 npm test
 npm run lint
+npx tsc --noEmit
 npm run build
+npm audit
 ```
+
+The lockfile pins Miniflare's transitive `undici` dependency to `7.29.1` to
+address [GHSA-3wwx-pv8p-q78v](https://github.com/advisories/GHSA-3wwx-pv8p-q78v).
+CI audits development tooling as well as production dependencies. Remove the
+override once the upstream dependency resolves a patched version on its own.
 
 ## Challenge-period work
 
